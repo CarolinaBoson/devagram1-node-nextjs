@@ -10,7 +10,7 @@ import md5 from 'md5';
 const handler = nc()
     .use(upload.single('file'))
     .post(async (req : NextApiRequest, res : NextApiResponse<RespostaPadraoMsg>) => {
-            {
+        try{
             const usuario = req.body as CadastroRequisicao;
         
             if(!usuario.nome || usuario.nome.length < 2){
@@ -45,17 +45,15 @@ const handler = nc()
             }
             await UsuarioModel.create(usuarioASerSalvo);
             return res.status(200).json({msg : 'Usuario criado com sucesso'});
-
+        }catch(e : any){
+            console.log(e);
+            return res.status(400).json({erro : e.toString()});
         }
 });
-
 export const config = {
     api: {
         bodyParser : false
     }
 }
-
-
-    
 
 export default conectarMongoDB(handler);
